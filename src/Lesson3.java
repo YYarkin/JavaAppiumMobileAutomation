@@ -68,7 +68,7 @@ public class Lesson3 {
         );
 
         assertHasSomeElementsWithLocator(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']"),
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title']"),
                 "No query results found",
                 10
         );
@@ -83,6 +83,36 @@ public class Lesson3 {
                 By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']"),
                 "Search results are still displayed",
                 10
+        );
+    }
+
+    @Test
+    public void testEx4TitleResultsContainsText() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' element",
+                5
+        );
+
+        String searhTarget = "Java";
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                searhTarget,
+                "Cannot find Search element",
+                5
+        );
+
+        List<WebElement> elementsList = assertHasSomeElementsWithLocator(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title']"),
+                "No query results found",
+                10
+        );
+
+        assertElementHasText(
+                elementsList,
+                searhTarget,
+                "Elements dont contain expected text"
         );
     }
 
@@ -105,16 +135,34 @@ public class Lesson3 {
     private WebElement assertElementHasText(By by, String expectedText, String errorMessage) {
         WebElement soughtElement = waitForElementPresent(by, "Cannot find sought element");
         String soughtText = soughtElement.getAttribute("text");
-        Assert.assertTrue(
-                errorMessage +
+        Assert.assertTrue(errorMessage +
                         "\nReceiving text: " + soughtText +
                         "\nExpected text: " + expectedText,
                 soughtText.contains(expectedText));
         return soughtElement;
     }
 
-    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+    private void assertElementHasText(WebElement soughtElement, String expectedText, String errorMessage) {
+        String soughtText = soughtElement.getAttribute("text");
+        Assert.assertTrue(errorMessage +
+                        "\nReceiving text: " + soughtText +
+                        "\nExpected text: " + expectedText,
+                soughtText.contains(expectedText));
+    }
+
+    private void assertElementHasText(List<WebElement> soughtElements, String expectedText, String errorMessage) {
+        String soughtText;
+        for (int i = 0; i < soughtElements.size(); i++) {
+            soughtText = soughtElements.get(i).getAttribute("text");
+            Assert.assertTrue(errorMessage +
+                            "\n(Element " + String.valueOf(i + 1) + ") Receiving text: " + soughtText +
+                            "\nExpected text: " + expectedText,
+                    soughtText.contains(expectedText));
+        }
+    }
+
+    private WebElement waitForElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
@@ -123,20 +171,21 @@ public class Lesson3 {
         waitForElementPresent(by, errorMessage, timeoutInSeconds);
         List<WebElement> soughtsElements = driver.findElements(by);
         System.out.println("Number of elements displayed = " + soughtsElements.size());
+        for (int i = 0; i < soughtsElements.size(); i++)
+            System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("text"));
         Assert.assertTrue(errorMessage, soughtsElements.size() >= 1);
         return soughtsElements;
     }
 
-    private WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+    private WebElement waitForElementAndClear(By by, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.clear();
         return element;
     }
 
-    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
+    private boolean waitForElementNotPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
+        wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
-
 }
