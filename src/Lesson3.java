@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class Lesson3 {
 
@@ -51,6 +52,40 @@ public class Lesson3 {
         );
     }
 
+    @Test
+    public void testEx3CancelSearch() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' element",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find Search element",
+                5
+        );
+
+        assertHasSomeElementsWithLocator(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']"),
+                "No query results found",
+                10
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find Search element",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']"),
+                "Search results are still displayed",
+                10
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -76,6 +111,32 @@ public class Lesson3 {
                         "\nExpected text: " + expectedText,
                 soughtText.contains(expectedText));
         return soughtElement;
+    }
+
+    private WebElement waitForElementAndSendKeys(By by, String value, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
+    }
+
+    private List<WebElement> assertHasSomeElementsWithLocator(By by, String errorMessage, long timeoutInSeconds) {
+        waitForElementPresent(by, errorMessage, timeoutInSeconds);
+        List<WebElement> soughtsElements = driver.findElements(by);
+        System.out.println("Number of elements displayed = " + soughtsElements.size());
+        Assert.assertTrue(errorMessage, soughtsElements.size() >= 1);
+        return soughtsElements;
+    }
+
+    private WebElement waitForElementAndClear(By by, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
+        element.clear();
+        return element;
+    }
+
+    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
 }
