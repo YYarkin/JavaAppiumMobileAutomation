@@ -211,6 +211,33 @@ public class Lesson4 {
         );
     }
 
+    @Test
+    public void testEx6AssertTitle() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find 'Search Wikipedia' element",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text,'Search…')]"),
+                "Java",
+                "Cannot find search element",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "Cannot find 'Search Wikipedia' element",
+                5
+        );
+
+        assertElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title"
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -262,10 +289,16 @@ public class Lesson4 {
                 .perform();
     }
 
-    private boolean waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
+    private boolean waitForElementNotPresent(By by, String errorMesage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
+        wait.withMessage(errorMesage + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
+    private void assertElementPresent(By by, String errorMesage) {
+        //Assert.assertTrue(errorMesage, driver.findElement(by).isDisplayed());
+        //ну или еще проще
+        waitForElementPresent(by,errorMesage,0);
     }
 }
 
