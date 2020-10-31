@@ -160,4 +160,8 @@ public class MainPageObject {
         Assert.assertTrue(errorMessage, soughtsElements.size() >= 1);
         return soughtsElements;
     }
+
+    public void assertElementPresent(By by, String errorMesage) {
+        Assert.assertTrue(errorMesage, driver.findElement(by).isDisplayed());
+    }
 }

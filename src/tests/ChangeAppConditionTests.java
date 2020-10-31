@@ -46,4 +46,26 @@ public class ChangeAppConditionTests extends CoreTestCase {
         this.backgroundApp(2);
         searchPageObject.waitForSearchResult("Object-oriented programming language");
     }
+
+    //My
+    @Test
+    public void testEx7ForExample() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+
+        searchPageObject.initSearchInput();
+        String searchLine = "Java";
+        searchPageObject.typeSearchLine(searchLine);
+        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+
+        String titleBeforeRotation = articlePageObject.getArticleTitle();
+        this.rotateScreenLandscape();
+        String titleAfterRotation = articlePageObject.getArticleTitle();
+
+        assertEquals(
+                "Article title have been changed after screen rotation",
+                titleBeforeRotation,
+                titleAfterRotation
+        );
+    }
 }

@@ -14,10 +14,15 @@ public class ArticlePageObject extends MainPageObject {
             ADD_TO_MY_LIST_OVERLAY = "org.wikipedia:id/onboarding_button",
             MY_LIST_NAME_NPUT = "org.wikipedia:id/text_input",
             MY_LIST_OK_BUTTON = "//*[@text='OK']",
-            CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+            CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']",
+            FOLDER_BY_NAME_TPL = "//*[@text='{FOLDER_NAME}']";
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
+    }
+
+    private static String getFolderXpathByName(String nameOfFolder) {
+        return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}", nameOfFolder);
     }
 
     public WebElement waitForTitleElement() {
@@ -36,7 +41,7 @@ public class ArticlePageObject extends MainPageObject {
                 20);
     }
 
-    public void addArticleToMyList(String nameOfFolder) {
+    public void addArticleToMyNewList(String nameOfFolder) {
         this.waitForElementAndClick(
                 By.xpath(OPTIONS_BUTTON),
                 "Cannot find button to open article options",
@@ -79,6 +84,31 @@ public class ArticlePageObject extends MainPageObject {
         this.waitForElementAndClick(
                 By.xpath(CLOSE_ARTICLE_BUTTON),
                 "Cannot find navigation button to My list",
+                5
+        );
+    }
+
+    //My
+    public void assertTitlePresent() {
+        this.assertElementPresent(By.id(TITLE), "Cannot find article title on page!");
+    }
+
+    public void addArticleToMyCurrentList(String nameOfFolder) {
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find button to open article options",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find option to add article to reading list",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.xpath(getFolderXpathByName(nameOfFolder)),
+                "Cannot find folder by name " + nameOfFolder,
                 5
         );
     }
