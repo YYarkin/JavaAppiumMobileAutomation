@@ -161,6 +161,16 @@ public class MainPageObject {
         return soughtsElements;
     }
 
+    public List<WebElement> assertHasSomeElementsWithLocator(By by, int countOfElements, String errorMessage, long timeoutInSeconds) {
+        waitForElementPresent(by, errorMessage, timeoutInSeconds);
+        List<WebElement> soughtsElements = driver.findElements(by);
+        System.out.println("Number of elements displayed = " + soughtsElements.size());
+        for (int i = 0; i < soughtsElements.size(); i++)
+            System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("text"));
+        Assert.assertTrue(errorMessage, soughtsElements.size() >= countOfElements);
+        return soughtsElements;
+    }
+
     public void assertElementPresent(By by, String errorMesage) {
         Assert.assertTrue(errorMesage, driver.findElement(by).isDisplayed());
     }
