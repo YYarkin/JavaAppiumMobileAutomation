@@ -2,6 +2,7 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
@@ -102,12 +103,12 @@ public class MainPageObject {
                 .perform();
     }
 
-    public int getAmountOfElements(By by){
+    public int getAmountOfElements(By by) {
         List elements = driver.findElements(by);
         return elements.size();
     }
 
-    public void assertElementNotPresent(By by, String errorMessage){
+    public void assertElementNotPresent(By by, String errorMessage) {
         int amountOfElements = getAmountOfElements(by);
         if (amountOfElements > 0) {
             String defaultMessage = "An element '" + by.toString() + "' supposed to be not present\n";
@@ -118,5 +119,45 @@ public class MainPageObject {
     public String waitForElementAndGetAttribute(By by, String attribute, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    //My
+    public WebElement assertElementHasText(By by, String expectedText, String errorMessage) {
+        WebElement soughtElement = waitForElementPresent(by, "Cannot find sought element");
+        String soughtText = soughtElement.getAttribute("text");
+        Assert.assertTrue(errorMessage +
+                        "\nReceiving text: " + soughtText +
+                        "\nExpected text: " + expectedText,
+                soughtText.contains(expectedText));
+        return soughtElement;
+    }
+
+    public void assertElementHasText(WebElement soughtElement, String expectedText, String errorMessage) {
+        String soughtText = soughtElement.getAttribute("text");
+        Assert.assertTrue(errorMessage +
+                        "\nReceiving text: " + soughtText +
+                        "\nExpected text: " + expectedText,
+                soughtText.contains(expectedText));
+    }
+
+    public void assertElementHasText(List<WebElement> soughtElements, String expectedText, String errorMessage) {
+        String soughtText;
+        for (int i = 0; i < soughtElements.size(); i++) {
+            soughtText = soughtElements.get(i).getAttribute("text");
+            Assert.assertTrue(errorMessage +
+                            "\n(Element " + String.valueOf(i + 1) + ") Receiving text: " + soughtText +
+                            "\nExpected text: " + expectedText,
+                    soughtText.contains(expectedText));
+        }
+    }
+
+    public List<WebElement> assertHasSomeElementsWithLocator(By by, String errorMessage, long timeoutInSeconds) {
+        waitForElementPresent(by, errorMessage, timeoutInSeconds);
+        List<WebElement> soughtsElements = driver.findElements(by);
+        System.out.println("Number of elements displayed = " + soughtsElements.size());
+        for (int i = 0; i < soughtsElements.size(); i++)
+            System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("text"));
+        Assert.assertTrue(errorMessage, soughtsElements.size() >= 1);
+        return soughtsElements;
     }
 }

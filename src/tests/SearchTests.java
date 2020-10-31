@@ -3,6 +3,9 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SearchTests extends CoreTestCase {
 
@@ -46,5 +49,35 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.typeSearchLine(searchLine);
         searchPageObject.waitForEmptyResultsLabel();
         searchPageObject.assertThereIsNoResultOfSearch();
+    }
+
+    //My
+    @Test
+    public void testEx2ElementHasText() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.searchInputHasText("Search…");
+    }
+
+    @Test
+    public void testEx3CancelSearch() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.searchHasResults();
+        searchPageObject.clearSearchResults();
+    }
+
+    @Test
+    public void testEx4TitleResultsContainsText() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        String searсhTarget = "Java";
+        searchPageObject.typeSearchLine(searсhTarget);
+        List<WebElement> elementsList = searchPageObject.searchHasResults();
+        searchPageObject.searchResultsHasText(elementsList, searсhTarget);
     }
 }
