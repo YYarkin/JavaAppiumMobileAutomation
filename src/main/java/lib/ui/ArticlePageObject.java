@@ -16,10 +16,15 @@ abstract public class ArticlePageObject extends MainPageObject {
             MY_LIST_OK_BUTTON,
             CLOSE_ARTICLE_BUTTON,
             FOLDER_BY_NAME_TPL,
-            CLOSE_DIALOG_WINDOW;
+            CLOSE_DIALOG_WINDOW,
+            TITLE_WITH_ID;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
+    }
+
+    private static String getTitleElement(String substring) {
+        return TITLE_WITH_ID.replace("{TITLE}", substring);
     }
 
     private static String getFolderXpathByName(String nameOfFolder) {
@@ -28,6 +33,10 @@ abstract public class ArticlePageObject extends MainPageObject {
 
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(TITLE, "Cannot find article title on page!", 15);
+    }
+
+    public WebElement waitForTitleElement(String id) {
+        return this.waitForElementPresent(getTitleElement(id), "Cannot find article title on page!", 15);
     }
 
     public String getArticleTitle() {

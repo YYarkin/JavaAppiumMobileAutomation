@@ -60,9 +60,13 @@ public class MyListsTests extends CoreTestCase {
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
         articlePageObject.waitForTitleElement();
-        String title1BeforeSaveInList = articlePageObject.getArticleTitle();
-        String nameOfFolder = "Learning programming";
-        articlePageObject.addArticleToMyNewList(nameOfFolder);
+        String title1 = articlePageObject.getArticleTitle();
+
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyNewList(nameOfFolder);
+        } else {
+            articlePageObject.addArticlesToMySaved();
+        }
         articlePageObject.closeArticle();
 
         searchPageObject.initSearchInput();
@@ -70,23 +74,21 @@ public class MyListsTests extends CoreTestCase {
         searchPageObject.typeSearchLine(searchLine2);
         searchPageObject.clickByArticleWithSubstring("General purpose high-level programming language");
 
-        articlePageObject.waitForTitleElement();
-        articlePageObject.addArticleToMyCurrentList(nameOfFolder);
+        articlePageObject.waitForTitleElement(searchLine2);
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.addArticleToMyCurrentList(nameOfFolder);
+        } else {
+            articlePageObject.addArticlesToMySaved();
+        }
         articlePageObject.closeArticle();
 
         navigationUI.clickMyLists();
 
-        myListsPageObject.openFolderByName(nameOfFolder);
+        if (Platform.getInstance().isAndroid()) {
+            myListsPageObject.openFolderByName(nameOfFolder);
+        }
+
         myListsPageObject.swipeByArticleToDelete(searchLine2);
-        myListsPageObject.clickToArticleByTitle("Java (programming language)");
-
-        articlePageObject.waitForTitleElement();
-        String title1InList = articlePageObject.getArticleTitle();
-
-        assertEquals(
-                "Article title have been changed after save in list",
-                title1BeforeSaveInList,
-                title1InList
-        );
+        myListsPageObject.waitForArticleToAppearByTitle(title1);
     }
 }

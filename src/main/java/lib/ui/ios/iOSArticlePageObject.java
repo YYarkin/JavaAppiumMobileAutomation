@@ -11,6 +11,7 @@ public class iOSArticlePageObject extends ArticlePageObject {
         OPTIONS_ADD_TO_MY_LIST_BUTTON = "id:Save for later";
         CLOSE_ARTICLE_BUTTON = "id:Back";
         CLOSE_DIALOG_WINDOW = "id:places auth close";
+        TITLE_WITH_ID = "id:{TITLE}";
     }
 
     public iOSArticlePageObject(AppiumDriver driver) {
