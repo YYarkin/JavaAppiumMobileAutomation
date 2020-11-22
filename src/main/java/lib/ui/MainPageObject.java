@@ -225,8 +225,12 @@ public class MainPageObject {
         By by = this.getLocatorByString(locator);
         List<WebElement> soughtsElements = driver.findElements(by);
         System.out.println("Number of elements displayed = " + soughtsElements.size());
-        for (int i = 0; i < soughtsElements.size(); i++)
-            System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("text"));
+        for (int i = 0; i < soughtsElements.size(); i++) {
+            if (Platform.getInstance().isAndroid())
+                System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("text"));
+            else if (Platform.getInstance().isIOS())
+                System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("name"));
+        }
         Assert.assertTrue(errorMessage, soughtsElements.size() >= countOfElements);
         return soughtsElements;
     }

@@ -1,6 +1,7 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
@@ -98,7 +99,11 @@ abstract public class SearchPageObject extends MainPageObject {
     }
 
     public List<WebElement> searchHasResults(int countOfElements) {
-        return this.assertHasSomeElementsWithLocator(SEARCH_RESULT_ELEMENTS_TITLE, countOfElements, "No query results found", 10);
+        if (Platform.getInstance().isAndroid()) {
+            return this.assertHasSomeElementsWithLocator(SEARCH_RESULT_ELEMENTS_TITLE, countOfElements, "No query results found", 10);
+        } else {
+            return this.assertHasSomeElementsWithLocator(SEARCH_RESULT_ELEMENT, countOfElements, "No query results found", 10);
+        }
     }
 
     public void clearSearchResults() {
