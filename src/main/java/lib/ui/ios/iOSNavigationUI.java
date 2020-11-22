@@ -6,8 +6,7 @@ import lib.ui.NavigationUI;
 public class iOSNavigationUI extends NavigationUI {
 
     static {
-        //todo
-        MY_LISTS_LINK = "xpath://android.widget.FrameLayout[@content-desc='My lists']";
+        MY_LISTS_LINK = "id:Saved";
     }
 
     public iOSNavigationUI(AppiumDriver driver) {

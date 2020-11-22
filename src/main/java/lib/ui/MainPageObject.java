@@ -1,5 +1,6 @@
 package lib.ui;
 
+import com.gargoylesoftware.htmlunit.ElementNotFoundException;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -124,7 +125,7 @@ public class MainPageObject {
         int pointToClickY = middleY;
 
         TouchAction action = new TouchAction(driver);
-        action.tap(PointOption.point(pointToClickX,pointToClickY)).perform();
+        action.tap(PointOption.point(pointToClickX, pointToClickY)).perform();
     }
 
     public void swipeElementToLeft(String locator, String errorMesage) {
@@ -137,18 +138,12 @@ public class MainPageObject {
         int middleY = (upperY + lowerY) / 2;
 
         TouchAction action = new TouchAction(driver);
-        action.press(PointOption.point(rightX, middleY));
-        action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
-
-                if (Platform.getInstance().isAndroid()) {
-                    action.moveTo(PointOption.point(leftX, middleY));
-                } else {
-                    int offsetX = (-1 * element.getSize().getWidth());
-                    action.moveTo(PointOption.point(offsetX, 0));
-                }
-
-        action.release();
-        action.perform();
+        action
+                .press(PointOption.point(rightX, middleY))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)))
+                .moveTo(PointOption.point(leftX, middleY))
+                .release()
+                .perform();
     }
 
     public int getAmountOfElements(String locator) {
@@ -237,5 +232,16 @@ public class MainPageObject {
     public void assertElementPresent(String locator, String errorMesage) {
         By by = this.getLocatorByString(locator);
         Assert.assertTrue(errorMesage, driver.findElement(by).isDisplayed());
+    }
+
+    public boolean checkElementPresent(String locator, long waitTimeOut) {
+        By by = this.getLocatorByString(locator);
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, waitTimeOut);
+            wait.until(ExpectedConditions.presenceOfElementLocated(by));
+            return true;
+        } catch (ElementNotFoundException ex) {
+            return false;
+        }
     }
 }

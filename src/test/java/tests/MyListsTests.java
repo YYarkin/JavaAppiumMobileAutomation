@@ -15,6 +15,7 @@ import org.junit.Test;
 public class MyListsTests extends CoreTestCase {
 
     private static final String nameOfFolder = "Learning programming";
+
     @Test
     public void testSaveFirstArticleToMyList() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);

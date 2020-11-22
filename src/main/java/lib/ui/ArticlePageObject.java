@@ -15,7 +15,8 @@ abstract public class ArticlePageObject extends MainPageObject {
             MY_LIST_NAME_INPUT,
             MY_LIST_OK_BUTTON,
             CLOSE_ARTICLE_BUTTON,
-            FOLDER_BY_NAME_TPL;
+            FOLDER_BY_NAME_TPL,
+            CLOSE_DIALOG_WINDOW;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -92,9 +93,11 @@ abstract public class ArticlePageObject extends MainPageObject {
         );
     }
 
-    //todo
     public void addArticlesToMySaved() {
         this.waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Cannot find option to add article to reading list", 5);
+        if (checkElementPresent(CLOSE_DIALOG_WINDOW, 2)) {
+            this.waitForElementAndClick(CLOSE_DIALOG_WINDOW, "Cannot find close button for dialog 'Sync your saved articles?'", 5);
+        }
     }
 
     public void closeArticle() {
