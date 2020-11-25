@@ -58,7 +58,7 @@ public class Platform {
     private DesiredCapabilities getIOSDesiredCapabilities() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "iPhone 11");
+        capabilities.setCapability("deviceName", "iPhone 11 Pro");
         capabilities.setCapability("platformVersion", "13.0");
         capabilities.setCapability("app", "/Users/admin/Desktop/JavaAppiumAutomation/apks/Wikipedia.app");
         capabilities.setCapability("orientation", "PORTRAIT");
