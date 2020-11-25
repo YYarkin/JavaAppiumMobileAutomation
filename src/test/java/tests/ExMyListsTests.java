@@ -12,27 +12,42 @@ import lib.ui.factories.NavigationUIFactory;
 import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
-public class MyListsTests extends CoreTestCase {
+public class ExMyListsTests extends CoreTestCase {
 
     private static final String nameOfFolder = "Learning programming";
 
     @Test
-    public void testSaveFirstArticleToMyList() {
+    public void testEx5SaveTwoArticle() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         NavigationUI navigationUI = NavigationUIFactory.get(driver);
         MyListsPageObject myListsPageObject = MyListsPageObjectFactory.get(driver);
 
         searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
+        String searchLine1 = "Java";
+        searchPageObject.typeSearchLine(searchLine1);
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
         articlePageObject.waitForTitleElement();
-        String articleTitle = articlePageObject.getArticleTitle();
+        String title1 = articlePageObject.getArticleTitle();
 
         if (Platform.getInstance().isAndroid()) {
             articlePageObject.addArticleToMyNewList(nameOfFolder);
         } else {
+            articlePageObject.addArticlesToMySaved();
+        }
+        articlePageObject.closeArticle();
+
+        searchPageObject.initSearchInput();
+        String searchLine2 = "C++";
+        searchPageObject.typeSearchLine(searchLine2);
+        searchPageObject.clickByArticleWithSubstring("General purpose high-level programming language");
+
+        if (Platform.getInstance().isAndroid()) {
+            articlePageObject.waitForTitleElement();
+            articlePageObject.addArticleToMyCurrentList(nameOfFolder);
+        } else {
+            articlePageObject.waitForTitleElement(searchLine2);
             articlePageObject.addArticlesToMySaved();
         }
         articlePageObject.closeArticle();
@@ -43,6 +58,7 @@ public class MyListsTests extends CoreTestCase {
             myListsPageObject.openFolderByName(nameOfFolder);
         }
 
-        myListsPageObject.swipeByArticleToDelete(articleTitle);
+        myListsPageObject.swipeByArticleToDelete(searchLine2);
+        myListsPageObject.waitForArticleToAppearByTitle(title1);
     }
 }

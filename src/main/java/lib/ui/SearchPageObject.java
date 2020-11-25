@@ -15,7 +15,6 @@ abstract public class SearchPageObject extends MainPageObject {
             SEARCH_RESULT_BY_SUBSTRING_TPL,
             SEARCH_RESULT_ELEMENT,
             SEARCH_EMPTY_RESULT_ELEMENT,
-            SEARCH_INPUT_BY_ID,
             SEARCH_RESULT_ELEMENTS_TITLE,
             SEARCH_RES_WITH_TITLE_AND_DESCRIP_BY_SUBS_TPL;
 
@@ -87,7 +86,7 @@ abstract public class SearchPageObject extends MainPageObject {
 
     ///////////////////////////////////My
     public void searchInputHasText(String text) {
-        this.assertElementHasText(SEARCH_INPUT_BY_ID, text, "Element doesnt contain the search text " + text);
+        this.assertElementHasText(SEARCH_INPUT, text, "Element doesnt contain the search text " + text);
     }
 
     public void searchResultsHasText(List<WebElement> elementsList, String text) {
@@ -107,7 +106,7 @@ abstract public class SearchPageObject extends MainPageObject {
     }
 
     public void clearSearchResults() {
-        this.waitForElementAndClear(SEARCH_INPUT_BY_ID, "Cannot find Search element", 5);
+        this.waitForElementAndClear(SEARCH_INPUT, "Cannot find Search element", 5);
         this.waitForElementNotPresent(SEARCH_RESULT_ELEMENT, "Search results are still displayed", 10);
     }
 
