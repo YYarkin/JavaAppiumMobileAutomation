@@ -1,6 +1,7 @@
 package lib;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
 import junit.framework.TestCase;
 import lib.ui.WelcomePageObject;
 import org.openqa.selenium.ScreenOrientation;
@@ -10,10 +11,12 @@ import java.time.Duration;
 public class CoreTestCase extends TestCase {
 
     protected AppiumDriver driver;
+    AppiumDriverLocalService service = AppiumDriverLocalService.buildDefaultService();
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        service.start();
         driver = Platform.getInstance().getDriver();
         this.skipWelcomePageForIOSApp();
     }
@@ -21,6 +24,7 @@ public class CoreTestCase extends TestCase {
     @Override
     protected void tearDown() throws Exception {
         driver.quit();
+        service.stop();
 
         super.tearDown();
     }
