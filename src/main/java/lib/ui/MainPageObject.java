@@ -294,6 +294,8 @@ public class MainPageObject {
                 System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("text"));
             else if (Platform.getInstance().isIOS())
                 System.out.println(i + 1 + " = " + soughtsElements.get(i).getAttribute("name"));
+            else if (Platform.getInstance().isMW())
+                System.out.println(i + 1 + " = " + soughtsElements.get(i).getText());
         }
         Assert.assertTrue(errorMessage, soughtsElements.size() >= countOfElements);
         return soughtsElements;
