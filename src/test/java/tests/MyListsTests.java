@@ -2,10 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.Platform;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
@@ -15,6 +12,8 @@ import org.junit.Test;
 public class MyListsTests extends CoreTestCase {
 
     private static final String nameOfFolder = "Learning programming";
+    private static final String login = "WikiMobileTest";
+    private static final String password = "vTgfhYv9wiki";
 
     @Test
     public void testSaveFirstArticleToMyList() {
@@ -32,11 +31,27 @@ public class MyListsTests extends CoreTestCase {
 
         if (Platform.getInstance().isAndroid()) {
             articlePageObject.addArticleToMyNewList(nameOfFolder);
-        } else {
+            articlePageObject.closeArticle();
+        } else if (Platform.getInstance().isIOS()){
             articlePageObject.addArticlesToMySaved();
-        }
-        articlePageObject.closeArticle();
+            articlePageObject.closeArticle();
+        } else {
+            navigationUI.openNavigation();
 
+            AuthorizationPageObject auth = new AuthorizationPageObject(driver);
+            auth.login(login, password);
+
+            articlePageObject.waitForTitleElement();
+            articlePageObject.addArticlesToMySaved();
+
+            assertEquals("We are not on the same page after login",
+                    articleTitle,
+                    articlePageObject.getArticleTitle()
+            );
+        }
+
+
+        navigationUI.openNavigation();
         navigationUI.clickMyLists();
 
         if (Platform.getInstance().isAndroid()) {
