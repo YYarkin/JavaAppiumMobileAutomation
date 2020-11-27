@@ -2,10 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.Platform;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
@@ -15,6 +12,8 @@ import org.junit.Test;
 public class ExMyListsTests extends CoreTestCase {
 
     private static final String nameOfFolder = "Learning programming";
+    private static final String login = "WikiMobileTest";
+    private static final String password = "vTgfhYv9wiki";
 
     @Test
     public void testEx5SaveTwoArticle() {
@@ -33,24 +32,47 @@ public class ExMyListsTests extends CoreTestCase {
 
         if (Platform.getInstance().isAndroid()) {
             articlePageObject.addArticleToMyNewList(nameOfFolder);
-        } else {
+            articlePageObject.closeArticle();
+        } else if (Platform.getInstance().isIOS()) {
             articlePageObject.addArticlesToMySaved();
+            articlePageObject.closeArticle();
+        } else {
+            navigationUI.openNavigation();
+
+            AuthorizationPageObject auth = new AuthorizationPageObject(driver);
+            auth.login(login, password);
+
+            articlePageObject.waitForTitleElement();
+
+            assertEquals("We are not on the same page after login",
+                    title1,
+                    articlePageObject.getArticleTitle()
+            );
+
+            articlePageObject.addArticlesToMySaved();
+
         }
-        articlePageObject.closeArticle();
 
         searchPageObject.initSearchInput();
         String searchLine2 = "C++";
         searchPageObject.typeSearchLine(searchLine2);
-        searchPageObject.clickByArticleWithSubstring("General purpose high-level programming language");
 
         if (Platform.getInstance().isAndroid()) {
+            searchPageObject.clickByArticleWithSubstring("General purpose high-level programming language");
             articlePageObject.waitForTitleElement();
             articlePageObject.addArticleToMyCurrentList(nameOfFolder);
-        } else {
+            articlePageObject.closeArticle();
+        } else if (Platform.getInstance().isIOS()) {
+            searchPageObject.clickByArticleWithSubstring("General purpose high-level programming language");
             articlePageObject.waitForTitleElement(searchLine2);
             articlePageObject.addArticlesToMySaved();
+            articlePageObject.closeArticle();
+        } else {
+            searchPageObject.clickByArticleWithSubstring("General-purpose programming language");
+            articlePageObject.waitForTitleElement();
+            articlePageObject.addArticlesToMySaved();
+            navigationUI.openNavigation();
         }
-        articlePageObject.closeArticle();
 
         navigationUI.clickMyLists();
 
